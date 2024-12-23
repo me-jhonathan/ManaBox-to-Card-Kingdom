@@ -1,10 +1,7 @@
 import os
 import re
 import csv
-
-
-OUTPUT_FOLDER = 'Manabox to Cardkingdom'
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+import sys
 
 
 #  replace manabox set name for cardkingdom standards (ignoring case)
@@ -34,11 +31,23 @@ def replace_set_name_for_cardkingdom_standard(set_name):
     return set_name
 
 
+def check_for_input_file(input_file):
+    if not os.path.isfile(input_file):
+        print(f"\nERROR: Input_file: `{input_file}` does not exist please add then retry.\n")
+    sys.exit(1) 
+
+
+    OUTPUT_FOLDER = 'Manabox to Cardkingdom'
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
 def process_csv(input_file):
     """
     Process the collection CSV file, split cards by rarity,
     and generate a combined rarities file.
     """
+
+    check_for_input_file(input_file)
+
     output_files = {
         'common': os.path.join(OUTPUT_FOLDER, 'common_cards.csv'),
         'uncommon': os.path.join(OUTPUT_FOLDER, 'uncommon_cards.csv'),
