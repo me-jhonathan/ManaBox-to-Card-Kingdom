@@ -34,11 +34,12 @@ def replace_set_name_for_cardkingdom_standard(set_name):
 def check_for_input_file(input_file):
     if not os.path.isfile(input_file):
         print(f"\nERROR: Input_file: `{input_file}` does not exist please add then retry.\n")
-    sys.exit(1) 
+        sys.exit(1)
 
+    output_folder = 'Manabox to Cardkingdom'
+    os.makedirs(output_folder, exist_ok=True)
+    return output_folder
 
-    OUTPUT_FOLDER = 'Manabox to Cardkingdom'
-    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 def process_csv(input_file):
     """
@@ -46,15 +47,15 @@ def process_csv(input_file):
     and generate a combined rarities file.
     """
 
-    check_for_input_file(input_file)
+    output_folder = check_for_input_file(input_file)
 
     output_files = {
-        'common': os.path.join(OUTPUT_FOLDER, 'common_cards.csv'),
-        'uncommon': os.path.join(OUTPUT_FOLDER, 'uncommon_cards.csv'),
-        'rare': os.path.join(OUTPUT_FOLDER, 'rare_cards.csv'),
-        'mythic': os.path.join(OUTPUT_FOLDER, 'mythic_cards.csv'),
-        'other': os.path.join(OUTPUT_FOLDER, 'other_cards.csv'),
-        'all_rarities': os.path.join(OUTPUT_FOLDER, 'all_rarities.csv')
+        'common': os.path.join(output_folder, 'common_cards.csv'),
+        'uncommon': os.path.join(output_folder, 'uncommon_cards.csv'),
+        'rare': os.path.join(output_folder, 'rare_cards.csv'),
+        'mythic': os.path.join(output_folder, 'mythic_cards.csv'),
+        'other': os.path.join(output_folder, 'other_cards.csv'),
+        'all_rarities': os.path.join(output_folder, 'all_rarities.csv')
     }
 
     writers = {rarity: open(file, mode='w', newline='', encoding='utf-8') for rarity, file in output_files.items()}
@@ -96,7 +97,7 @@ def process_csv(input_file):
         with open(output_file, mode='w', newline='', encoding='utf-8') as file:
             file.write(data)
 
-    print(f"Processed '{input_file}' and saved outputs in '{OUTPUT_FOLDER}'.")
+    print(f"\nProcessed '{input_file}' and saved outputs in '{output_folder}'.\n")
 
 
 input_file = 'ManaBox_Collection.csv'
