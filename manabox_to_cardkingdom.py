@@ -6,7 +6,7 @@ import sys
 
 #  replace manabox set name for cardkingdom standards (ignoring case)
 REPLACEMENT_DICT = {
-    "crimson vow commander": "Innistrad: Vow Commander Decks",
+    "crimson vow commander": "Innistrad: Crimson Vow Commander Decks",
     "tales of middle-earth commander": "The Lord of the Rings: Tales of Middle-earth Commander Decks",
     "modern horizons 3 commander": "Modern Horizons 3 Commander Decks",
     "outlaws of thunder junction commander": "Outlaws Of Thunder Junction Commander Decks",
@@ -65,14 +65,18 @@ def process_csv(input_file):
 
     with open(input_file, mode='r', newline='', encoding='utf-8') as infile:
         reader = csv.reader(infile)
-        headers = next(reader, None)  # Skip header row
+        headers = next(reader)
+        header_index = {name.lower(): idx for idx, name in enumerate(headers)}
 
         for row in reader:
-            name = f'"{row[2]}"'
-            set_name = replace_set_name_for_cardkingdom_standard(row[4])
-            foil = '0' if row[6] == 'normal' else '1'
-            quantity = row[8]
-            rarity = row[7].lower()
+            raw_name = row[header_index["name"]]
+            clean_name = raw_name.split('//')[0].strip()
+            name = f'"{clean_name}"'
+            set_name = replace_set_name_for_cardkingdom_standard(row[header_index["set name"]])
+            foil_type = row[header_index["foil"]].lower()
+            foil = '0' if foil_type == 'normal' else '1'
+            quantity = row[header_index["quantity"]]
+            rarity = row[header_index["rarity"]].lower()
 
             combined_rarities.append([name, set_name, foil, quantity])
 
